@@ -5,6 +5,7 @@ function openFile(fileID) {
 function loadFile(file, imageID) {
   var reader = new FileReader();
   reader.onload = function (e) {
+      clean();
       image = getById(imageID);//new Image();
       image.src = e.target.result;
       data = readOCR(image);

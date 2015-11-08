@@ -19,24 +19,41 @@
                   <h1>PassportGO!</h1>
                   <p>¡Bienvenido al lector de pasaportes desde una imagen!</p>
                </div>
-            </div>   
+            </div>
     </div>
-
    	<div class="panel panel-default">
   		<div class="panel-body">
-    		<p>
- 				<img src="subirimagen.png" onclick="openFile('file')" id="image">
+    		<div class="krContainer">
+ 					<img src="subirimagen.png" onclick="openFile('file')" id="image">
 					<input type="file" id="file" onchange="loadFile(this, 'image')">
 					<p id="test"></p>
-            </p>
-			<p>
-				<output>Nombre: </output><tr>
-				<output>Apellido Paterno: </output>
-				<output>Apellido Materno: </output>
-				<output>Nacionalidad: </output>
-				<output>Fecha de Nacimiento: </output>
-			</p>
+        </div>
+				<div class="krContainer">
+					<!--input type="text" readonly="true" id="nacionalidad">
+					<input type="text" readonly="true" id="fechaNac"-->
+					<div class="input-group">
+  					<span class="input-group-addon" id="basic-addon3">Nombre</span>
+  					<input type="text" class="form-control" aria-describedby="basic-addon3" id="nombre">
+					</div>
+					<div class="input-group">
+  					<span class="input-group-addon" id="basic-addon3">Apellido Paterno</span>
+  					<input type="text" class="form-control" aria-describedby="basic-addon3" id="appellido1">
+					</div>
+					<div class="input-group">
+  					<span class="input-group-addon" id="basic-addon3">Apellido Materno</span>
+  					<input type="text" class="form-control" aria-describedby="basic-addon3" id="appellido2">
+					</div>
+					<div class="input-group">
+  					<span class="input-group-addon" id="basic-addon3">Número Pasaporte</span>
+  					<input type="text" class="form-control" aria-describedby="basic-addon3" id="nuPasaporte">
+					</div>
+					<div class="input-group">
+  					<span class="input-group-addon" id="basic-addon3">CURP</span>
+  					<input type="text" class="form-control" aria-describedby="basic-addon3" id="curp">
+					</div>
+					<a class="btn btn-primary btn-lg" href="#" role="button" onclick="clean()" id="clean">Limpiar</a>
+				</div>
   		</div>
-	</div>  		
+	</div>
 </body>
 </html>

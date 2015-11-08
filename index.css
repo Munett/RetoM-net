@@ -24,7 +24,7 @@ h1{
 }
 
 p{
-	font-size: 40px;
+	font-size: 1em;
 	font-weight: bold;
 }
 
@@ -43,4 +43,15 @@ p{
 
 #file{
   display: none;
+}
+
+.krContainer{
+  width: 45%;
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.input-group, #clean{
+  margin-top: 0.5em;
 }

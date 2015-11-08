@@ -1,20 +1,21 @@
 function openFile(fileID) {
-  var file = document.getElementById(fileID).click();
+  var file = getById(fileID).click();
 }
 
 function loadFile(file, imageID) {
   var reader = new FileReader();
   reader.onload = function (e) {
-      image = document.getElementById(imageID)//new Image();
+      image = getById(imageID);//new Image();
       image.src = e.target.result;
-      readOCR(image);
+      data = readOCR(image);
+      filldata(data);
   }
   reader.readAsDataURL(file.files[0]);
 }
 
 function readOCR(image) {
-  var data = OCRAD(image);
-  //var data = "1231321241AD12EDA12EWQE212P<MEXGARCIA<LOPEZ<<CRISTINA<BRENDA<<<<<<<<1389679245MEX770626F0192372<<<<<<<<<<2"
+  var data = OCRAD(image).toUpperCase();
+  var result = new Object();
   var i;
   //Obtenemos el codigo si es un passaporte
   var isPassport;
@@ -26,36 +27,40 @@ function readOCR(image) {
     }
   }
 
+  if(!isPassport){
+    alert("No es una imagen de pasaporte valida o no se pudo reconocer, intente de nuevo");
+    clean();
+    return;
+  }
+
   //Verificamos si es Mexicano
   if("MEX" == data.substring(0, 3)){
     data = data.substring(3, data.length);
   }
 
   //Obtenemos el primer appellido
-  var appellido1;
   for (i = 0; i < data.length; i++) {
     if(data.charAt(i) == '<'){
-      appellido1 = data.substring(0, i);
+      result.appellido1 = data.substring(0, i);
       data = data.substring(i+1, data.length);
       break;
     }
   }
 
   //Obtenemos el segundo appellido
-  var Appellido2;
   for (i = 0; i < data.length; i++) {
     if(data.charAt(i) == '<'){
-      appellido2 = data.substring(0, i);
+      result.appellido2 = data.substring(0, i);
       data = data.substring(i+2, data.length);
       break;
     }
   }
 
   // Todos los nombres
-  var nombre = "";
+  result.nombre = "";
   for (i = 0; i < data.length; i++) {
     if(data.charAt(i) == '<'){
-      nombre += data.substring(0, i) + " ";
+      result.nombre += data.substring(0, i) + " ";
       data = data.substring(i+1, data.length);
       i=0;
     }
@@ -73,19 +78,16 @@ for (i = 0; i < data.length; i++) {
     }
  }
 
- var nuPasaporte;
  for (i = 0; i < data.length; i++) {
     if(data.charAt(i) =='M'){
-     nuPasaporte = data.substring(0,i) ;
+     result.nuPasaporte = data.substring(0,i) ;
       data = data.substring(i+3,data.length);
     }
   }
 
-  var curp;
   for (i = 0; i < data.length; i++) {
-
       if(data.charAt(i) == '<'){
-      curp= data.substring(0,i) ;
+      result.curp= data.substring(0,i) ;
       data = data.substring(i+3,data.length);
       break;
       }
@@ -93,17 +95,27 @@ for (i = 0; i < data.length; i++) {
 
    }
 
-  test = document.getElementById("test");
-  test.appendChild(document.createTextNode("Apellido1: " + appellido1));
-  test.appendChild(document.createElement("br"));
-  test.appendChild(document.createTextNode("Apellido2: " + appellido2));
-  test.appendChild(document.createElement("br"));
-  test.appendChild(document.createTextNode("Nombre(s): " + nombre));
-  test.appendChild(document.createElement("br"));
-  test.appendChild(document.createTextNode("Numero de Pasaporte: " + nuPasaporte));
-  test.appendChild(document.createElement("br"));
-  test.appendChild(document.createTextNode("Curp: " + curp));
-  test.appendChild(document.createElement("br"));
-  test.appendChild(document.createTextNode(data));
+  return result;
+}
 
+function filldata(data) {
+  getById("nombre").value = data.nombre;
+  getById("appellido1").value = data.appellido1;
+  getById("appellido2").value = data.appellido2;
+  getById("nuPasaporte").value = data.nuPasaporte;
+  getById("curp").value = data.curp;
+}
+
+function clean() {
+  getById("nombre").value = "";
+  getById("appellido1").value = "";
+  getById("appellido2").value = "";
+  getById("nuPasaporte").value = "";
+  getById("curp").value = "";
+  getById("image").src = "subirimagen.png";
+}
+
+function getById(ID) {
+  console.log(ID);
+  return document.getElementById(ID);
 }

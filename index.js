@@ -7,11 +7,37 @@ function loadFile(file, imageID) {
   reader.onload = function (e) {
       clean();
       image = getById(imageID);//new Image();
+      image.style = "";
       image.src = e.target.result;
-      data = readOCR(image);
+      canvas = editColor(image);
+      data = readOCR(canvas);
+      image.style.maxWidth = "80%";
       filldata(data);
   }
   reader.readAsDataURL(file.files[0]);
+}
+
+function editColor(imagen) {
+  var r=0, g=0, b=0, count = 0, canvas, ctx, imageData, data, i;
+  canvas = document.createElement('canvas');
+  ctx = canvas.getContext("2d");
+  canvas.width = imagen.width;
+  canvas.height = imagen.height;
+  ctx.drawImage(imagen, 0, 0);
+  imageData = ctx.getImageData(0, 0, imagen.width, imagen.height);
+  data = imageData.data;
+  for(i = 0, n = data.length; i < n; i += 4) {
+    ++count;
+    data[i] = data[i] > 175 ? 255 : data[i];
+    data[i+1] = data[i] > 175 ? 255 : data[i+1];
+    data[i+2] = data[i] > 175 ? 255 : data[i+2];
+
+    data[i] = data[i] < 75 ? 0 : data[i];
+    data[i+1] = data[i] < 75 ? 0 : data[i+1];
+    data[i+2] = data[i] < 75 ? 0 : data[i+2];
+  }
+  ctx.putImageData(imageData, 0, 0);
+  return canvas;
 }
 
 function readOCR(image) {
@@ -29,15 +55,14 @@ function readOCR(image) {
   }
 
   if(!isPassport){
-    alert("No es una imagen de pasaporte valida o no se pudo reconocer, intente de nuevo");
+    alert("No es una imagen de pasaporte valida o no se pudo reconocer, intente de nuevo: ");
     clean();
     return;
   }
 
   //Verificamos si es Mexicano
-  if("MEX" == data.substring(0, 3)){
-    data = data.substring(3, data.length);
-  }
+  result.country = country[data.substring(0, 3)];
+  data = data.substring(3, data.length);
 
   //Obtenemos el primer appellido
   for (i = 0; i < data.length; i++) {
@@ -80,9 +105,10 @@ for (i = 0; i < data.length; i++) {
  }
 
  for (i = 0; i < data.length; i++) {
-    if(data.charAt(i) =='M'){
+    if(data.charAt(i) =='M' || data.charAt(i) =='<'){
      result.nuPasaporte = data.substring(0,i) ;
-      data = data.substring(i+3,data.length);
+      data = data.substring(data.charAt(i) =='M' ? i+3 : i+2,data.length);
+      break;
     }
   }
 
@@ -105,6 +131,7 @@ function filldata(data) {
   getById("appellido2").value = data.appellido2;
   getById("nuPasaporte").value = data.nuPasaporte;
   getById("curp").value = data.curp;
+  getById("country").value = data.country;
 }
 
 function clean() {
@@ -113,6 +140,7 @@ function clean() {
   getById("appellido2").value = "";
   getById("nuPasaporte").value = "";
   getById("curp").value = "";
+  getById("country").value = "";
   getById("image").src = "subirimagen.png";
 }
 

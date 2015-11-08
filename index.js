@@ -4,17 +4,26 @@ function openFile(fileID) {
 
 function loadFile(file, imageID) {
   var reader = new FileReader();
+  reader.readAsDataURL(file.files[0]);
   reader.onload = function (e) {
       clean();
-      image = getById(imageID);//new Image();
+      image = getById(imageID);
       image.style = "";
       image.src = e.target.result;
       canvas = editColor(image);
-      data = readOCR(canvas);
+      //getById("body").appendChild(canvas);//Descomentar para pruebas
       image.style.maxWidth = "80%";
+      data = readOCR(canvas);
       filldata(data);
   }
-  reader.readAsDataURL(file.files[0]);
+}
+
+function cleanText(string) {
+  var specialChars = "!@#$^&%*()+=-[]\/{}|:<>?,.¡¿";
+  for (var i = 0; i < specialChars.length; i++) {
+    string = string.replace(new RegExp("\\" + specialChars[i], 'gi'), '');
+  }
+  return string;
 }
 
 function editColor(imagen) {
@@ -28,13 +37,13 @@ function editColor(imagen) {
   data = imageData.data;
   for(i = 0, n = data.length; i < n; i += 4) {
     ++count;
-    data[i] = data[i] > 175 ? 255 : data[i];
-    data[i+1] = data[i] > 175 ? 255 : data[i+1];
-    data[i+2] = data[i] > 175 ? 255 : data[i+2];
+    data[i] = data[i] > 170 ? 255 : data[i];
+    data[i+1] = data[i] > 170 ? 255 : data[i+1];
+    data[i+2] = data[i] > 170 ? 255 : data[i+2];
 
-    data[i] = data[i] < 75 ? 0 : data[i];
-    data[i+1] = data[i] < 75 ? 0 : data[i+1];
-    data[i+2] = data[i] < 75 ? 0 : data[i+2];
+    data[i] = data[i] < 50 ? 0 : data[i];
+    data[i+1] = data[i] < 50 ? 0 : data[i+1];
+    data[i+2] = data[i] < 50 ? 0 : data[i+2];
   }
   ctx.putImageData(imageData, 0, 0);
   return canvas;
@@ -42,6 +51,7 @@ function editColor(imagen) {
 
 function readOCR(image) {
   var data = OCRAD(image).toUpperCase();
+  //alert(data);//Descomentar para pruebas
   var result = new Object();
   var i;
   //Obtenemos el codigo si es un passaporte
@@ -67,7 +77,7 @@ function readOCR(image) {
   //Obtenemos el primer appellido
   for (i = 0; i < data.length; i++) {
     if(data.charAt(i) == '<'){
-      result.appellido1 = data.substring(0, i);
+      result.appellido1 = cleanText(data.substring(0, i));
       data = data.substring(i+1, data.length);
       break;
     }
@@ -76,7 +86,7 @@ function readOCR(image) {
   //Obtenemos el segundo appellido
   for (i = 0; i < data.length; i++) {
     if(data.charAt(i) == '<'){
-      result.appellido2 = data.substring(0, i);
+      result.appellido2 = cleanText(data.substring(0, i));
       data = data.substring(i+2, data.length);
       break;
     }
@@ -86,7 +96,7 @@ function readOCR(image) {
   result.nombre = "";
   for (i = 0; i < data.length; i++) {
     if(data.charAt(i) == '<'){
-      result.nombre += data.substring(0, i) + " ";
+      result.nombre += cleanText(data.substring(0, i)) + " ";
       data = data.substring(i+1, data.length);
       i=0;
     }
@@ -106,7 +116,7 @@ for (i = 0; i < data.length; i++) {
 
  for (i = 0; i < data.length; i++) {
     if(data.charAt(i) =='M' || data.charAt(i) =='<'){
-     result.nuPasaporte = data.substring(0,i) ;
+     result.nuPasaporte =cleanText(data.substring(0,i));
       data = data.substring(data.charAt(i) =='M' ? i+3 : i+2,data.length);
       break;
     }
@@ -114,7 +124,7 @@ for (i = 0; i < data.length; i++) {
 
   for (i = 0; i < data.length; i++) {
       if(data.charAt(i) == '<'){
-      result.curp= data.substring(0,i) ;
+      result.curp= data.substring(0,i);
       data = data.substring(i+3,data.length);
       break;
       }

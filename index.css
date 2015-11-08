@@ -1,9 +1,46 @@
+body {
+  font-family: sans-serif;
+  background-color: #315481;
+  text-align: center;
+  background-image: linear-gradient(to bottom, #41C0FF, #918e82 100%);
+  background-attachment: fixed;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+}
+
+h1{
+  font-size: 50px;
+  margin: 10px;
+  margin-bottom: 10px;
+  display: inline-block;
+  margin-right: 1em;
+  font-weight: bold;
+}
+
+p{
+	font-size: 40px;
+	font-weight: bold;
+}
+
+
 #image{
   border: dotted 1px #eee;
-  width: 200px;
-  height: 200px;
+  min-width: 150px;
+  min-height: 150px;
+  max-width: 80%;
   display: block;
+  margin: auto;
 }
+
+.derecha   { float: right; }
+
+
 #file{
   display: none;
 }

@@ -13,8 +13,30 @@
 	<title>Reto Münett</title>
 </head>
 <body>
-	<img src="" onclick="openFile('file')" id="image">
-	<input type="file" id="file" onchange="loadFile(this, 'image')">
-	<p id="test"></p>
+	<div class="container">
+           <div class="row">
+               <div class="jumbotron">
+                  <h1>PassportGO!</h1>
+                  <p>¡Bienvenido al lector de pasaportes desde una imagen!</p>
+               </div>
+            </div>   
+    </div>
+
+   	<div class="panel panel-default">
+  		<div class="panel-body">
+    		<p>
+ 				<img src="subirimagen.png" onclick="openFile('file')" id="image">
+					<input type="file" id="file" onchange="loadFile(this, 'image')">
+					<p id="test"></p>
+            </p>
+			<p>
+				<output>Nombre: </output><tr>
+				<output>Apellido Paterno: </output>
+				<output>Apellido Materno: </output>
+				<output>Nacionalidad: </output>
+				<output>Fecha de Nacimiento: </output>
+			</p>
+  		</div>
+	</div>  		
 </body>
 </html>
